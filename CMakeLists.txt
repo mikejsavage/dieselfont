@@ -15,7 +15,7 @@ include_directories(
   "libmsdf/ext"
 )
 
-add_executable(msdf-atlasgen "msdf-atlasgen/main.cpp")
+add_executable(msdf-atlasgen "msdf-atlasgen/main.cpp" "msdf-atlasgen/serialization.cpp")
 add_dependencies(msdf-atlasgen msdf)
 target_link_libraries(msdf-atlasgen
   ${Boost_LIBRARIES}

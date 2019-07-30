@@ -28,19 +28,15 @@
 #include <iostream>
 #include "box.h"
 
-namespace binpack {
-
 template< typename T >
-T score_bssf( box<T>& a, box<T>& b )
-{
-    return std::min( a.width() - b.width(), a.height() - b.height() );
+T score_bssf( box<T>& a, box<T>& b ) {
+    return std::min( a.width - b.width, a.height - b.height );
 }
 
 // http://clb.demon.fi/files/RectangleBinPack.pdf
 // MAX-RECTANGLES-BSSF-BBF GLOBAL
 template< typename T >
-bool bin_pack_max_rect( std::vector< box<T>* >& input, T width, T height, T spacing )
-{
+bool bin_pack_max_rect( std::vector< box<T>* >& input, T width, T height, T spacing ) {
     std::vector<box<T>> boxes;
     boxes.reserve( width*height );
     boxes.push_back( box< size_t >{ 0, 0, width, height } );
@@ -85,8 +81,8 @@ bool bin_pack_max_rect( std::vector< box<T>* >& input, T width, T height, T spac
         auto& irect = *input[min_source];
         auto& drect = boxes[min_dest];
 
-        irect.x_ = drect.x_;
-        irect.y_ = drect.y_;
+        irect.x = drect.x;
+        irect.y = drect.y;
 
         make_splits( drect, irect, newrects, spacing );
         boxes.erase( boxes.begin() + min_dest );
@@ -140,10 +136,6 @@ bool bin_pack_max_rect( std::vector< box<T>* >& input, T width, T height, T spac
     std::cout << "\n";
 
     return true;
-}
-
-
-
 }
 
 #endif
