@@ -113,7 +113,7 @@ static void Serialize( SerializationBuffer * buf, Font & font ) {
         }
 }
 
-static void write_specification( std::vector< char_info >& charinfos, settings& cfg, double scaling ) {
+static void write_specification( std::vector< char_info >& charinfos, const settings& cfg, double scaling ) {
 	std::fstream desc(cfg.output_file_name+".msdf", std::ios::out | std::ios::binary | std::ios::trunc );
 
 	auto max_y = max_element( charinfos.begin(), charinfos.end(), [](auto& a, auto& b) {return a.bbox.top() < b.bbox.top();});
@@ -123,7 +123,7 @@ static void write_specification( std::vector< char_info >& charinfos, settings& 
 	char buf[ sizeof( Font ) ];
 	Font font = { };
 	font.glyph_padding = cfg.smoothpixels * scale;
-	font.pixel_range = 1337; // TODO
+	font.pixel_range = scaling * cfg.range;
 	font.descent = scale * max_y->bbox.top();
 
 	for( const char_info & info : charinfos ) {
@@ -212,7 +212,6 @@ std::vector< char_info > build_charset( FontHandle* font, const settings& cfg, d
 		ch.bitmap = Bitmap< FloatRGB >( width, height );
 		edgeColoringSimple( ch.shape, 2.5 );
 		generateMSDF( ch.bitmap, ch.shape, cfg.range, scaling, offset / scaling );
-
 	}
 
 	return charinfos;
