@@ -93,24 +93,24 @@ box< double > bounds( const Shape& shape )
 }
 
 struct Glyph {
-        MinMax2 bounds;
-        MinMax2 uv_bounds;
-        float advance;
+	MinMax2 bounds;
+	MinMax2 uv_bounds;
+	float advance;
 };
 
 struct Font {
-        float glyph_padding;
-        float pixel_range;
-	float descent;
+	float glyph_padding;
+	float pixel_range;
+	float ascent;
 
-        Glyph glyphs[ 256 ];
+	Glyph glyphs[ 256 ];
 };
 
 static void Serialize( SerializationBuffer * buf, Font & font ) {
-        *buf & font.glyph_padding & font.pixel_range & font.descent;
-        for( Glyph & glyph : font.glyphs ) {
-                *buf & glyph.bounds & glyph.uv_bounds & glyph.advance;
-        }
+	*buf & font.glyph_padding & font.pixel_range & font.ascent;
+	for( Glyph & glyph : font.glyphs ) {
+		*buf & glyph.bounds & glyph.uv_bounds & glyph.advance;
+	}
 }
 
 static void write_specification( std::vector< char_info >& charinfos, const settings& cfg, double scaling ) {
@@ -124,7 +124,7 @@ static void write_specification( std::vector< char_info >& charinfos, const sett
 	Font font = { };
 	font.glyph_padding = cfg.smoothpixels * scale;
 	font.pixel_range = scaling * cfg.range;
-	font.descent = scale * max_y->bbox.top();
+	font.ascent = scale * max_y->bbox.top();
 
 	for( const char_info & info : charinfos ) {
 		Glyph & glyph = font.glyphs[ info.codepoint ];
@@ -139,7 +139,7 @@ static void write_specification( std::vector< char_info >& charinfos, const sett
 		glyph.uv_bounds.maxs.x = ( info.placement.right() + 0.5f ) / cfg.tex_dims.width;
 		glyph.uv_bounds.maxs.y = 1.0f - ( info.placement.top() + 0.5f ) / cfg.tex_dims.height;
 
-                glyph.advance = scale * info.advance;
+		glyph.advance = scale * info.advance;
 	}
 
 	bool ok = Serialize( font, buf, sizeof( buf ) );
