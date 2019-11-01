@@ -130,14 +130,14 @@ static void write_specification( std::vector< char_info >& charinfos, const sett
 		Glyph & glyph = font.glyphs[ info.codepoint ];
 
 		glyph.bounds.mins.x = scale * info.bbox.x;
-		glyph.bounds.mins.y = scale * info.bbox.y;
+		glyph.bounds.mins.y = -scale * info.bbox.top();
 		glyph.bounds.maxs.x = scale * info.bbox.right();
-		glyph.bounds.maxs.y = scale * info.bbox.top();
+		glyph.bounds.maxs.y = -scale * info.bbox.y;
 
 		glyph.uv_bounds.mins.x = ( info.placement.x + 0.5f ) / cfg.tex_dims.width;
-		glyph.uv_bounds.mins.y = 1.0f - ( info.placement.y + 0.5f ) / cfg.tex_dims.height;
+		glyph.uv_bounds.mins.y = 1.0f - ( info.placement.top() + 0.5f ) / cfg.tex_dims.height;
 		glyph.uv_bounds.maxs.x = ( info.placement.right() + 0.5f ) / cfg.tex_dims.width;
-		glyph.uv_bounds.maxs.y = 1.0f - ( info.placement.top() + 0.5f ) / cfg.tex_dims.height;
+		glyph.uv_bounds.maxs.y = 1.0f - ( info.placement.y + 0.5f ) / cfg.tex_dims.height;
 
 		glyph.advance = scale * info.advance;
 	}
