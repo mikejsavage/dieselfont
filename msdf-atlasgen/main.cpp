@@ -155,7 +155,7 @@ void write_image( const std::vector< char_info >& charinfos, const settings& cfg
 	for( auto& ch : charinfos ) {
 		bitmap.place( ch.placement.x, ch.placement.y, ch.bitmap );
 	}
-	savePng( bitmap, (cfg.output_file_name + "_atlas.png").c_str() );
+	savePng( bitmap, (cfg.output_file_name + ".png").c_str() );
 }
 
 std::vector< char_info > read_shapes( FontHandle* font, const settings& cfg ) {
