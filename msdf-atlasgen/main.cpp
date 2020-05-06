@@ -100,14 +100,14 @@ struct Glyph {
 
 struct Font {
 	float glyph_padding;
-	float pixel_range;
+	float dSDF_dUV;
 	float ascent;
 
 	Glyph glyphs[ 256 ];
 };
 
 static void Serialize( SerializationBuffer * buf, Font & font ) {
-	*buf & font.glyph_padding & font.pixel_range & font.ascent;
+	*buf & font.glyph_padding & font.dSDF_dUV & font.ascent;
 	for( Glyph & glyph : font.glyphs ) {
 		*buf & glyph.bounds & glyph.uv_bounds & glyph.advance;
 	}
@@ -123,7 +123,7 @@ static void write_specification( std::vector< char_info >& charinfos, const sett
 	char buf[ sizeof( Font ) ];
 	Font font = { };
 	font.glyph_padding = cfg.smoothpixels * scale;
-	font.pixel_range = scaling * cfg.range;
+	font.dSDF_dUV = 1.0f / ( scaling * cfg.range );
 	font.ascent = scale * max_y->bbox.top();
 
 	for( const char_info & info : charinfos ) {
